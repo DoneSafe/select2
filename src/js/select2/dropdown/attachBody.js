@@ -4,6 +4,7 @@ define([
 ], function ($, Utils) {
   function AttachBody (decorated, $element, options) {
     this.$dropdownParent = $(options.get('dropdownParent') || document.body);
+    this.storedWatchers = null;
 
     decorated.call(this, $element, options);
   }
@@ -114,6 +115,7 @@ define([
     var orientationEvent = 'orientationchange.select2.' + container.id;
 
     var $watchers = this.$container.parents().filter(Utils.hasScroll);
+    this.storedWatchers = $watchers;
     $watchers.each(function () {
       Utils.StoreData(this, 'select2-scroll-position', {
         x: $(this).scrollLeft(),
@@ -139,10 +141,13 @@ define([
     var resizeEvent = 'resize.select2.' + container.id;
     var orientationEvent = 'orientationchange.select2.' + container.id;
 
-    var $watchers = this.$container.parents().filter(Utils.hasScroll);
-    $watchers.off(scrollEvent);
+    if (this.storedWatchers !== null) {
+      var $watchers = this.storedWatchers;
+      $watchers.off(scrollEvent);
 
-    $(window).off(scrollEvent + ' ' + resizeEvent + ' ' + orientationEvent);
+      $(window).off(scrollEvent + ' ' + resizeEvent + ' ' + orientationEvent);
+      this.storedWatchers = null;
+    }
   };
 
   AttachBody.prototype._positionDropdown = function () {

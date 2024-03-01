@@ -20,10 +20,12 @@
 
 .select2-search--inline {
   float: left;
+  width: 100% !important;
 
   .select2-search__field {
     box-sizing: border-box;
     border: none;
+    width: 100% !important;
     font-size: 100%;
     margin-top: 5px;
     padding: 0;

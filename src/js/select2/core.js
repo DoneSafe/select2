@@ -493,6 +493,15 @@ define([
     this.trigger('query', {});
   };
 
+  Select2.prototype.reFetch = function () {
+    var input = $(".select2-container--default.select2-container--open")
+      .find(".select2-search")
+      .find("input")
+      .val();
+
+    this.trigger("query", { term: input });
+  };
+
   Select2.prototype.close = function (evt) {
     if (!this.isOpen()) {
       return;

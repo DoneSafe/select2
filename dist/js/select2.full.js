@@ -3638,7 +3638,7 @@ S2.define('select2/data/ajax',[
       }, function () {
         // Attempt to detect if a request was aborted
         // Only works if the transport exposes a status property
-        if ('status' in $request &&
+        if ($request && 'status' in $request &&
             ($request.status === 0 || $request.status === '0')) {
           return;
         }
@@ -4328,6 +4328,7 @@ S2.define('select2/dropdown/attachBody',[
 ], function ($, Utils) {
   function AttachBody (decorated, $element, options) {
     this.$dropdownParent = $(options.get('dropdownParent') || document.body);
+    this.storedWatchers = null;
 
     decorated.call(this, $element, options);
   }
@@ -4438,6 +4439,7 @@ S2.define('select2/dropdown/attachBody',[
     var orientationEvent = 'orientationchange.select2.' + container.id;
 
     var $watchers = this.$container.parents().filter(Utils.hasScroll);
+    this.storedWatchers = $watchers;
     $watchers.each(function () {
       Utils.StoreData(this, 'select2-scroll-position', {
         x: $(this).scrollLeft(),
@@ -4463,10 +4465,13 @@ S2.define('select2/dropdown/attachBody',[
     var resizeEvent = 'resize.select2.' + container.id;
     var orientationEvent = 'orientationchange.select2.' + container.id;
 
-    var $watchers = this.$container.parents().filter(Utils.hasScroll);
-    $watchers.off(scrollEvent);
+    if (this.storedWatchers !== null) {
+      var $watchers = this.storedWatchers;
+      $watchers.off(scrollEvent);
 
-    $(window).off(scrollEvent + ' ' + resizeEvent + ' ' + orientationEvent);
+      $(window).off(scrollEvent + ' ' + resizeEvent + ' ' + orientationEvent);
+      this.storedWatchers = null;
+    }
   };
 
   AttachBody.prototype._positionDropdown = function () {
@@ -5849,6 +5854,15 @@ S2.define('select2/core',[
     }
 
     this.trigger('query', {});
+  };
+
+  Select2.prototype.reFetch = function () {
+    var input = $(".select2-container--default.select2-container--open")
+      .find(".select2-search")
+      .find("input")
+      .val();
+
+    this.trigger("query", { term: input });
   };
 
   Select2.prototype.close = function (evt) {
