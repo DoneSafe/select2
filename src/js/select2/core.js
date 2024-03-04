@@ -332,7 +332,9 @@ define([
         if (key === KEYS.ESC || key === KEYS.TAB ||
             (key === KEYS.UP && evt.altKey)) {
           self.close(evt);
-
+          if (key === KEYS.TAB && this.isMultiple()) {
+            return;
+          }
           evt.preventDefault();
         } else if (key === KEYS.ENTER) {
           self.trigger('results:select', {});
@@ -529,6 +531,10 @@ define([
    */
   Select2.prototype.isDisabled = function () {
     return this.options.get('disabled');
+  };
+
+  Select2.prototype.isMultiple = function () {
+    return this.options.get('multiple');
   };
 
   Select2.prototype.isOpen = function () {

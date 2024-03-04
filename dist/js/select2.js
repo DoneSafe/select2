@@ -1760,7 +1760,7 @@ S2.define('select2/selection/multiple',[
   MultipleSelection.prototype.selectionContainer = function () {
     var $container = $(
       '<li class="select2-selection__choice">' +
-        '<span class="select2-selection__choice__remove" role="presentation">' +
+        '<span class="select2-selection__choice__remove" role="presentation" aria-label="Delete">' +
           '&times;' +
         '</span>' +
       '</li>'
@@ -2028,6 +2028,14 @@ S2.define('select2/selection/search',[
 
     container.on('focus', function (evt) {
       self.$search.trigger('focus');
+
+      setTimeout(() => {
+        if (!container.isOpen()) {
+          self.trigger('toggle', {
+            originalEvent: evt
+          });
+        }
+      }, 100);
     });
 
     container.on('results:focus', function (params) {
@@ -5695,7 +5703,9 @@ S2.define('select2/core',[
         if (key === KEYS.ESC || key === KEYS.TAB ||
             (key === KEYS.UP && evt.altKey)) {
           self.close(evt);
-
+          if (key === KEYS.TAB && this.isMultiple()) {
+            return;
+          }
           evt.preventDefault();
         } else if (key === KEYS.ENTER) {
           self.trigger('results:select', {});
@@ -5892,6 +5902,10 @@ S2.define('select2/core',[
    */
   Select2.prototype.isDisabled = function () {
     return this.options.get('disabled');
+  };
+
+  Select2.prototype.isMultiple = function () {
+    return this.options.get('multiple');
   };
 
   Select2.prototype.isOpen = function () {

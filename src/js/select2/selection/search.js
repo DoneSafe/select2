@@ -57,6 +57,14 @@ define([
 
     container.on('focus', function (evt) {
       self.$search.trigger('focus');
+
+      setTimeout(() => {
+        if (!container.isOpen()) {
+          self.trigger('toggle', {
+            originalEvent: evt
+          });
+        }
+      }, 100);
     });
 
     container.on('results:focus', function (params) {
