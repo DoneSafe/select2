@@ -24,6 +24,11 @@ define([
         self._handleClear(evt);
     });
 
+    this.$selection.on('click', '.select2-selection__clear',
+      function (evt) {
+        self._handleClear(evt);
+    });
+
     container.on('keypress', function (evt) {
       self._handleKeyboardClear(evt, container);
     });
@@ -100,9 +105,9 @@ define([
     var removeAll = this.options.get('translations').get('removeAllItems');
 
     var $remove = $(
-      '<span class="select2-selection__clear" title="' + removeAll() +'">' +
+      '<button type="button" class="select2-selection__clear" title="' + removeAll() +'" aria-label="' + removeAll() +'">' +
         '&times;' +
-      '</span>'
+      '</button>'
     );
     Utils.StoreData($remove[0], 'data', data);
 

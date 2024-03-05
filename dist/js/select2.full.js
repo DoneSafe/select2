@@ -1760,7 +1760,7 @@ S2.define('select2/selection/multiple',[
   MultipleSelection.prototype.selectionContainer = function () {
     var $container = $(
       '<li class="select2-selection__choice">' +
-        '<button type="button" class="select2-selection__choice__remove" role="button" aria-label="Remove item">' +
+        '<button type="button" class="select2-selection__choice__remove" aria-label="Remove item">' +
           '&times;' +
         '</button>' +
       '</li>'
@@ -1881,6 +1881,11 @@ S2.define('select2/selection/allowClear',[
         self._handleClear(evt);
     });
 
+    this.$selection.on('click', '.select2-selection__clear',
+      function (evt) {
+        self._handleClear(evt);
+    });
+
     container.on('keypress', function (evt) {
       self._handleKeyboardClear(evt, container);
     });
@@ -1957,9 +1962,9 @@ S2.define('select2/selection/allowClear',[
     var removeAll = this.options.get('translations').get('removeAllItems');
 
     var $remove = $(
-      '<span class="select2-selection__clear" title="' + removeAll() +'">' +
+      '<button type="button" class="select2-selection__clear" title="' + removeAll() +'" aria-label="' + removeAll() +'">' +
         '&times;' +
-      '</span>'
+      '</button>'
     );
     Utils.StoreData($remove[0], 'data', data);
 
@@ -5727,8 +5732,11 @@ S2.define('select2/core',[
       } else {
         if (key === KEYS.ENTER || key === KEYS.SPACE ||
             (key === KEYS.DOWN && evt.altKey)) {
-
-          if (key === KEYS.ENTER && this.isMultiple() && document.activeElement && document.activeElement.classList.contains('select2-selection__choice__remove')) return;
+          if (
+            key === KEYS.ENTER && document.activeElement && (
+            document.activeElement.classList.contains('select2-selection__choice__remove') ||
+            document.activeElement.classList.contains('select2-selection__clear'))
+          ) return;
           self.open();
 
           evt.preventDefault();
