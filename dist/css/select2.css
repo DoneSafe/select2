@@ -211,7 +211,10 @@
     cursor: pointer;
     display: inline-block;
     font-weight: bold;
-    margin-right: 2px; }
+    margin-right: 2px;
+    background: transparent;
+    border: none;
+    padding: 0; }
     .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
       color: #333; }
 

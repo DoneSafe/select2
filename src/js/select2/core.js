@@ -356,6 +356,8 @@ define([
       } else {
         if (key === KEYS.ENTER || key === KEYS.SPACE ||
             (key === KEYS.DOWN && evt.altKey)) {
+
+          if (key === KEYS.ENTER && this.isMultiple() && document.activeElement && document.activeElement.classList.contains('select2-selection__choice__remove')) return;
           self.open();
 
           evt.preventDefault();

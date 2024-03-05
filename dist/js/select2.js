@@ -1760,9 +1760,9 @@ S2.define('select2/selection/multiple',[
   MultipleSelection.prototype.selectionContainer = function () {
     var $container = $(
       '<li class="select2-selection__choice">' +
-        '<span class="select2-selection__choice__remove" role="presentation" aria-label="Delete">' +
+        '<button type="button" class="select2-selection__choice__remove" role="button" aria-label="Remove item">' +
           '&times;' +
-        '</span>' +
+        '</button>' +
       '</li>'
     );
 
@@ -5727,6 +5727,8 @@ S2.define('select2/core',[
       } else {
         if (key === KEYS.ENTER || key === KEYS.SPACE ||
             (key === KEYS.DOWN && evt.altKey)) {
+
+          if (key === KEYS.ENTER && this.isMultiple() && document.activeElement && document.activeElement.classList.contains('select2-selection__choice__remove')) return;
           self.open();
 
           evt.preventDefault();

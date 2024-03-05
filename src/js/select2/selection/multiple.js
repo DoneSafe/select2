@@ -70,9 +70,9 @@ define([
   MultipleSelection.prototype.selectionContainer = function () {
     var $container = $(
       '<li class="select2-selection__choice">' +
-        '<span class="select2-selection__choice__remove" role="presentation" aria-label="Delete">' +
+        '<button type="button" class="select2-selection__choice__remove" role="button" aria-label="Remove item">' +
           '&times;' +
-        '</span>' +
+        '</button>' +
       '</li>'
     );
 
