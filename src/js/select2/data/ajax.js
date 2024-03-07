@@ -36,6 +36,11 @@ define([
   };
 
   AjaxAdapter.prototype.processResults = function (results) {
+    if (results && 'results' in results && results.results && $.isArray(results.results)) {
+      results.results = results.results.map(element => {
+        return this._normalizeItem(element);
+      });
+    }
     return results;
   };
 
