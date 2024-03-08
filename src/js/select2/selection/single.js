@@ -36,7 +36,9 @@ define([
       .attr('id', id)
       .attr('role', 'textbox')
       .attr('aria-readonly', 'true');
-    this.$selection.attr('aria-labelledby', id);
+
+    this.$selection.attr('aria-labelledby', [this.options.get('labelledByBefore'), id, this.options.get('labelledByAfter')].join(' ').trim());
+    this.$selection.attr('aria-describedby', this.options.get('describedBy'));
 
     this.$selection.on('mousedown', function (evt) {
       // Only respond to left clicks
