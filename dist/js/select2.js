@@ -2055,6 +2055,10 @@ S2.define('select2/selection/search',[
       }
     });
 
+    container.on('results:message', function (params) {
+      self.$search.attr('aria-activedescendant', resultsId);
+    })
+
     this.$selection.on('focusin', '.select2-search--inline', function (evt) {
       self.trigger('focus', evt);
     });
