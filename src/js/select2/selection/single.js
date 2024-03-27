@@ -35,7 +35,8 @@ define([
     this.$selection.find('.select2-selection__rendered')
       .attr('id', id)
       .attr('role', 'textbox')
-      .attr('aria-readonly', 'true');
+      .attr('aria-readonly', 'true')
+      .attr('title', this.options.get('placeholder') || '');
 
     this.$selection.attr('aria-labelledby', [this.options.get('labelledByBefore'), id, this.options.get('labelledByAfter')].join(' ').trim());
     this.$selection.attr('aria-describedby', this.options.get('describedBy'));
@@ -69,7 +70,7 @@ define([
   SingleSelection.prototype.clear = function () {
     var $rendered = this.$selection.find('.select2-selection__rendered');
     $rendered.empty();
-    $rendered.removeAttr('title'); // clear tooltip on empty
+    $rendered.attr('title', this.options.get('placeholder') || ''); // set placeholder as tooltip on empty
   };
 
   SingleSelection.prototype.display = function (data, container) {

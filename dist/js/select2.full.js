@@ -1476,6 +1476,7 @@ S2.define('select2/selection/base',[
       // When the dropdown is open, aria-expanded="true"
       self.$selection.attr('aria-expanded', 'true');
       self.$selection.attr('aria-owns', resultsId);
+      self.$selection.attr('aria-controls', resultsId);
 
       self._attachCloseHandler(container);
     });
@@ -1485,6 +1486,7 @@ S2.define('select2/selection/base',[
       self.$selection.attr('aria-expanded', 'false');
       self.$selection.removeAttr('aria-activedescendant');
       self.$selection.removeAttr('aria-owns');
+      self.$selection.removeAttr('aria-controls');
 
       self.$selection.trigger('focus');
 
@@ -1619,7 +1621,8 @@ S2.define('select2/selection/single',[
     this.$selection.find('.select2-selection__rendered')
       .attr('id', id)
       .attr('role', 'textbox')
-      .attr('aria-readonly', 'true');
+      .attr('aria-readonly', 'true')
+      .attr('title', this.options.get('placeholder') || '');
 
     this.$selection.attr('aria-labelledby', [this.options.get('labelledByBefore'), id, this.options.get('labelledByAfter')].join(' ').trim());
     this.$selection.attr('aria-describedby', this.options.get('describedBy'));
@@ -1653,7 +1656,7 @@ S2.define('select2/selection/single',[
   SingleSelection.prototype.clear = function () {
     var $rendered = this.$selection.find('.select2-selection__rendered');
     $rendered.empty();
-    $rendered.removeAttr('title'); // clear tooltip on empty
+    $rendered.attr('title', this.options.get('placeholder') || ''); // set placeholder as tooltip on empty
   };
 
   SingleSelection.prototype.display = function (data, container) {
@@ -1992,7 +1995,7 @@ S2.define('select2/selection/search',[
       '<li class="select2-search select2-search--inline">' +
         '<input class="select2-search__field" type="search" tabindex="-1"' +
         ' autocomplete="off" autocorrect="off" autocapitalize="none"' +
-        ' spellcheck="false" role="searchbox" aria-autocomplete="list" />' +
+        ' spellcheck="false" role="searchbox" aria-autocomplete="list" aria-label="Search" />' +
       '</li>'
     );
 
@@ -4109,7 +4112,7 @@ S2.define('select2/dropdown/search',[
       '<span class="select2-search select2-search--dropdown">' +
         '<input class="select2-search__field" type="search" tabindex="-1"' +
         ' autocomplete="off" autocorrect="off" autocapitalize="none"' +
-        ' spellcheck="false" role="searchbox" aria-autocomplete="list" />' +
+        ' spellcheck="false" role="searchbox" aria-autocomplete="list" aria-label="Search" />' +
       '</span>'
     );
 

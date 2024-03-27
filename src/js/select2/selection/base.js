@@ -71,6 +71,7 @@ define([
       // When the dropdown is open, aria-expanded="true"
       self.$selection.attr('aria-expanded', 'true');
       self.$selection.attr('aria-owns', resultsId);
+      self.$selection.attr('aria-controls', resultsId);
 
       self._attachCloseHandler(container);
     });
@@ -80,6 +81,7 @@ define([
       self.$selection.attr('aria-expanded', 'false');
       self.$selection.removeAttr('aria-activedescendant');
       self.$selection.removeAttr('aria-owns');
+      self.$selection.removeAttr('aria-controls');
 
       self.$selection.trigger('focus');
 
