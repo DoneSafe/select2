@@ -57,14 +57,6 @@ define([
 
     container.on('focus', function (evt) {
       self.$search.trigger('focus');
-
-      setTimeout(() => {
-        if (!container.isOpen()) {
-          self.trigger('toggle', {
-            originalEvent: evt
-          });
-        }
-      }, 100);
     });
 
     container.on('results:focus', function (params) {
@@ -165,6 +157,12 @@ define([
 
         // Tabbing will be handled during the `keydown` phase
         if (key == KEYS.TAB) {
+          if (
+            document.activeElement === self.$search[0] ||
+            $.contains(self.$search[0], document.activeElement)
+          ) {
+            self.trigger('query', {term: self.$search.val() || ''});
+          }
           return;
         }
 
