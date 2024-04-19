@@ -1929,7 +1929,8 @@ S2.define('select2/selection/allowClear',[
 
     for (var d = 0; d < data.length; d++) {
       unselectData = {
-        data: data[d]
+        data: data[d],
+        clearing: true
       };
 
       // Trigger the `unselect` event, so people can prevent it from being
