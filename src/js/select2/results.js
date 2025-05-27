@@ -120,6 +120,7 @@ define([
 
   Results.prototype.setClasses = function () {
     var self = this;
+    var shouldClearAriaSelected = !this.options.get('doNotClearAriaSelected');
 
     this.data.current(function (selected) {
       var selectedIds = $.map(selected, function (s) {
@@ -141,7 +142,7 @@ define([
             (item.element == null && $.inArray(id, selectedIds) > -1)) {
           $option.attr('aria-selected', 'true');
         } else {
-          $option.attr('aria-selected', 'false');
+          shouldClearAriaSelected && $option.attr('aria-selected', 'false');
         }
       });
 

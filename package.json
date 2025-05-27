@@ -39,7 +39,7 @@
     "src",
     "dist"
   ],
-  "version": "4.0.13",
+  "version": "4.0.13-ds.0",
   "jspm": {
     "main": "js/select2",
     "directories": {
@@ -61,5 +61,8 @@
     "jquery-mousewheel": "~3.1.13",
     "node-sass": "^4.12.0"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "scripts": {
+    "build": "grunt compile"
+  }
 }

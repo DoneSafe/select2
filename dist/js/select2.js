@@ -1,5 +1,5 @@
 /*!
- * Select2 4.0.13
+ * Select2 4.0.13-ds.0
  * https://select2.github.io
  *
  * Released under the MIT license
@@ -961,6 +961,7 @@ S2.define('select2/results',[
 
   Results.prototype.setClasses = function () {
     var self = this;
+    var shouldClearAriaSelected = !this.options.get('doNotClearAriaSelected');
 
     this.data.current(function (selected) {
       var selectedIds = $.map(selected, function (s) {
@@ -982,7 +983,7 @@ S2.define('select2/results',[
             (item.element == null && $.inArray(id, selectedIds) > -1)) {
           $option.attr('aria-selected', 'true');
         } else {
-          $option.attr('aria-selected', 'false');
+          shouldClearAriaSelected && $option.attr('aria-selected', 'false');
         }
       });
 
