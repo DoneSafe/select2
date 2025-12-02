@@ -1,5 +1,5 @@
 /*!
- * Select2 4.0.13-ds.0
+ * Select2 4.0.13-ds.1
  * https://select2.github.io
  *
  * Released under the MIT license
@@ -1765,13 +1765,13 @@ S2.define('select2/selection/multiple',[
     return escapeMarkup(template(data, container));
   };
 
-  MultipleSelection.prototype.selectionContainer = function () {
+  MultipleSelection.prototype.selectionContainer = function (optionTitle) {
     var $container = $(
-      '<li class="select2-selection__choice">' +
-        '<button type="button" class="select2-selection__choice__remove" aria-label="Remove item">' +
-          '&times;' +
-        '</button>' +
-      '</li>'
+      `<li class="select2-selection__choice">
+        <button type="button" class="select2-selection__choice__remove" aria-label="${this.options.get('removeItemLabel') ? this.options.get('removeItemLabel') + ' - ' + optionTitle : 'Remove item' + ' - ' + optionTitle}">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </li>`
     );
 
     return $container;
@@ -1789,12 +1789,12 @@ S2.define('select2/selection/multiple',[
     for (var d = 0; d < data.length; d++) {
       var selection = data[d];
 
-      var $selection = this.selectionContainer();
+      var title = selection.title || selection.text;
+      var $selection = this.selectionContainer(title);
       var formatted = this.display(selection, $selection);
 
       $selection.append(formatted);
 
-      var title = selection.title || selection.text;
 
       if (title) {
         $selection.attr('title', title);
@@ -1969,12 +1969,17 @@ S2.define('select2/selection/allowClear',[
     }
 
     var removeAll = this.options.get('translations').get('removeAllItems');
+    var removeAllLabel  = this.options.get('removeAllLabel');
+    var title = removeAllLabel ? removeAllLabel : removeAll();
 
     var $remove = $(
-      '<button type="button" class="select2-selection__clear" title="' + removeAll() +'" aria-label="' + removeAll() +'">' +
-        '&times;' +
-      '</button>'
+      `<button type="button" class="select2-selection__clear">
+        <span aria-hidden="true">&times;</span>
+      </button>`
     );
+
+    $remove.attr('title', title);
+
     Utils.StoreData($remove[0], 'data', data);
 
     this.$selection.find('.select2-selection__rendered').prepend($remove);

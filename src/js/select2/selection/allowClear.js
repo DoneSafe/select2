@@ -104,12 +104,17 @@ define([
     }
 
     var removeAll = this.options.get('translations').get('removeAllItems');
+    var removeAllLabel  = this.options.get('removeAllLabel');
+    var title = removeAllLabel ? removeAllLabel : removeAll();
 
     var $remove = $(
-      '<button type="button" class="select2-selection__clear" title="' + removeAll() +'" aria-label="' + removeAll() +'">' +
-        '&times;' +
-      '</button>'
+      `<button type="button" class="select2-selection__clear">
+        <span aria-hidden="true">&times;</span>
+      </button>`
     );
+
+    $remove.attr('title', title);
+
     Utils.StoreData($remove[0], 'data', data);
 
     this.$selection.find('.select2-selection__rendered').prepend($remove);

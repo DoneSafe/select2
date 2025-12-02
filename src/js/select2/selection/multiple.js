@@ -67,13 +67,13 @@ define([
     return escapeMarkup(template(data, container));
   };
 
-  MultipleSelection.prototype.selectionContainer = function () {
+  MultipleSelection.prototype.selectionContainer = function (optionTitle) {
     var $container = $(
-      '<li class="select2-selection__choice">' +
-        '<button type="button" class="select2-selection__choice__remove" aria-label="Remove item">' +
-          '&times;' +
-        '</button>' +
-      '</li>'
+      `<li class="select2-selection__choice">
+        <button type="button" class="select2-selection__choice__remove" aria-label="${this.options.get('removeItemLabel') ? this.options.get('removeItemLabel') + ' - ' + optionTitle : 'Remove item' + ' - ' + optionTitle}">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </li>`
     );
 
     return $container;
@@ -91,12 +91,12 @@ define([
     for (var d = 0; d < data.length; d++) {
       var selection = data[d];
 
-      var $selection = this.selectionContainer();
+      var title = selection.title || selection.text;
+      var $selection = this.selectionContainer(title);
       var formatted = this.display(selection, $selection);
 
       $selection.append(formatted);
 
-      var title = selection.title || selection.text;
 
       if (title) {
         $selection.attr('title', title);
