@@ -19,11 +19,6 @@ define([
       }
     }
 
-    this.$selection.on('mousedown', '.select2-selection__clear',
-      function (evt) {
-        self._handleClear(evt);
-    });
-
     this.$selection.on('click', '.select2-selection__clear',
       function (evt) {
         self._handleClear(evt);
@@ -109,7 +104,7 @@ define([
 
     var $remove = $(
       `<button type="button" class="select2-selection__clear">
-        <span aria-hidden="true">&times;</span>
+        <span aria-hidden="true" class="select2-clear-icon">&times;</span>
       </button>`
     );
 

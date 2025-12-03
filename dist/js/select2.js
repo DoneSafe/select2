@@ -1,5 +1,5 @@
 /*!
- * Select2 4.0.13-ds.1
+ * Select2 4.0.13-ds.2
  * https://select2.github.io
  *
  * Released under the MIT license
@@ -1634,6 +1634,12 @@ S2.define('select2/selection/single',[
         return;
       }
 
+      if (evt.target.classList.contains('select2-selection__clear') ||
+          evt.target.classList.contains('select2-clear-icon')) {
+        // Ignore the event if the clear button was clicked
+        return;
+      }
+
       self.trigger('toggle', {
         originalEvent: evt
       });
@@ -1884,11 +1890,6 @@ S2.define('select2/selection/allowClear',[
       }
     }
 
-    this.$selection.on('mousedown', '.select2-selection__clear',
-      function (evt) {
-        self._handleClear(evt);
-    });
-
     this.$selection.on('click', '.select2-selection__clear',
       function (evt) {
         self._handleClear(evt);
@@ -1974,7 +1975,7 @@ S2.define('select2/selection/allowClear',[
 
     var $remove = $(
       `<button type="button" class="select2-selection__clear">
-        <span aria-hidden="true">&times;</span>
+        <span aria-hidden="true" class="select2-clear-icon">&times;</span>
       </button>`
     );
 

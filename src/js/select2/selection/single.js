@@ -47,6 +47,12 @@ define([
         return;
       }
 
+      if (evt.target.classList.contains('select2-selection__clear') ||
+          evt.target.classList.contains('select2-clear-icon')) {
+        // Ignore the event if the clear button was clicked
+        return;
+      }
+
       self.trigger('toggle', {
         originalEvent: evt
       });
