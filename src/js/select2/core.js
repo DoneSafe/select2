@@ -332,7 +332,7 @@ define([
         if (key === KEYS.ESC || key === KEYS.TAB ||
             (key === KEYS.UP && evt.altKey)) {
           self.close(evt);
-          if (key === KEYS.TAB && this.isMultiple()) {
+          if (key === KEYS.TAB) {
             return;
           }
           evt.preventDefault();
@@ -354,14 +354,13 @@ define([
           evt.preventDefault();
         }
       } else {
-        if (key === KEYS.ENTER || key === KEYS.SPACE ||
-            (key === KEYS.DOWN && evt.altKey)) {
+        if (key === KEYS.ENTER || key === KEYS.SPACE || key === KEYS.DOWN) {
           if (
             key === KEYS.ENTER && document.activeElement && (
             document.activeElement.classList.contains('select2-selection__choice__remove') ||
             document.activeElement.classList.contains('select2-selection__clear'))
           ) return;
-          self.open();
+          self.open(key === KEYS.DOWN);
 
           evt.preventDefault();
         }
@@ -488,7 +487,7 @@ define([
     }
   };
 
-  Select2.prototype.open = function () {
+  Select2.prototype.open = function (shouldHighlightFirstItem = false) {
     if (this.isOpen()) {
       return;
     }
@@ -497,7 +496,14 @@ define([
       return;
     }
 
-    this.trigger('query', {});
+    this.trigger('query', { term: '' });
+
+    if (!shouldHighlightFirstItem) return;
+    // when down arrow is used to open, highlight the first item in the list and move 'virtual' focus to it
+    // we should give it a slight delay to ensure that the results have been rendered
+    setTimeout(() => {
+      this.trigger('results:highlightFirstItem', {});
+    }, 1);
   };
 
   Select2.prototype.reFetch = function () {
@@ -513,7 +519,6 @@ define([
     if (!this.isOpen()) {
       return;
     }
-
     this.trigger('close', { originalEvent : evt });
   };
 

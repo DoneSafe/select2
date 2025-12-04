@@ -100,6 +100,14 @@ define([
   };
 
   Results.prototype.highlightFirstItem = function () {
+    // Check if loading indicator is still present
+    var $loadingResults = this.$results.find('.loading-results');
+    if ($loadingResults.length > 0) {
+      // Defer highlighting until loading is done
+      this._shouldHighlightAfterLoading = true;
+      return;
+    }
+
     var $options = this.$results
       .find('.select2-results__option[aria-selected]');
 
@@ -152,6 +160,9 @@ define([
   Results.prototype.showLoading = function (params) {
     this.hideLoading();
 
+    // Reset the flag since we're showing loading again
+    this._shouldHighlightAfterLoading = false;
+
     var loadingMore = this.options.get('translations').get('searching');
 
     var loading = {
@@ -167,6 +178,16 @@ define([
 
   Results.prototype.hideLoading = function () {
     this.$results.find('.loading-results').remove();
+
+    // If we were supposed to highlight the first item but couldn't because of loading,
+    // do it now that loading is done
+    if (this._shouldHighlightAfterLoading) {
+      this._shouldHighlightAfterLoading = false;
+      // Small delay to ensure DOM is updated
+      setTimeout(() => {
+        this.highlightFirstItem();
+      }, 1);
+    }
   };
 
   Results.prototype.option = function (data) {
@@ -416,6 +437,10 @@ define([
 
     container.on('results:message', function (params) {
       self.displayMessage(params);
+    });
+
+    container.on('results:highlightFirstItem', function () {
+      self.highlightFirstItem();
     });
 
     if ($.fn.mousewheel) {

@@ -21,10 +21,14 @@ define([
 
     this.$selection.on('click', '.select2-selection__clear',
       function (evt) {
+        container._clearButtonActivated = true;
         self._handleClear(evt);
     });
 
     container.on('keypress', function (evt) {
+      if (evt.which == KEYS.DELETE || evt.which == KEYS.BACKSPACE) {
+        container._clearButtonActivated = true;
+      }
       self._handleKeyboardClear(evt, container);
     });
   };
@@ -109,6 +113,11 @@ define([
     );
 
     $remove.attr('title', title);
+    var self = this;
+    $remove.on('focus', function (evt) {
+      // remove focus from 'combobox' if clear button is focused
+      self.container.trigger('blur', evt);
+    });
 
     Utils.StoreData($remove[0], 'data', data);
 

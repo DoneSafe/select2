@@ -1,5 +1,5 @@
 /*!
- * Select2 4.0.13-ds.3
+ * Select2 4.0.13-ds.4
  * https://select2.github.io
  *
  * Released under the MIT license
@@ -941,6 +941,14 @@ S2.define('select2/results',[
   };
 
   Results.prototype.highlightFirstItem = function () {
+    // Check if loading indicator is still present
+    var $loadingResults = this.$results.find('.loading-results');
+    if ($loadingResults.length > 0) {
+      // Defer highlighting until loading is done
+      this._shouldHighlightAfterLoading = true;
+      return;
+    }
+
     var $options = this.$results
       .find('.select2-results__option[aria-selected]');
 
@@ -993,6 +1001,9 @@ S2.define('select2/results',[
   Results.prototype.showLoading = function (params) {
     this.hideLoading();
 
+    // Reset the flag since we're showing loading again
+    this._shouldHighlightAfterLoading = false;
+
     var loadingMore = this.options.get('translations').get('searching');
 
     var loading = {
@@ -1008,6 +1019,16 @@ S2.define('select2/results',[
 
   Results.prototype.hideLoading = function () {
     this.$results.find('.loading-results').remove();
+
+    // If we were supposed to highlight the first item but couldn't because of loading,
+    // do it now that loading is done
+    if (this._shouldHighlightAfterLoading) {
+      this._shouldHighlightAfterLoading = false;
+      // Small delay to ensure DOM is updated
+      setTimeout(() => {
+        this.highlightFirstItem();
+      }, 1);
+    }
   };
 
   Results.prototype.option = function (data) {
@@ -1257,6 +1278,10 @@ S2.define('select2/results',[
 
     container.on('results:message', function (params) {
       self.displayMessage(params);
+    });
+
+    container.on('results:highlightFirstItem', function () {
+      self.highlightFirstItem();
     });
 
     if ($.fn.mousewheel) {
@@ -1653,8 +1678,17 @@ S2.define('select2/selection/single',[
     });
 
     container.on('focus', function (evt) {
+      if (container._clearButtonActivated) {
+        // Reset the flag and don't toggle when clear button was activated
+        container._clearButtonActivated = false;
+        return;
+      }
+
       if (!container.isOpen()) {
         self.$selection.trigger('focus');
+        self.trigger('toggle', {
+          originalEvent: evt
+        });
       }
     });
   };
@@ -1891,10 +1925,14 @@ S2.define('select2/selection/allowClear',[
 
     this.$selection.on('click', '.select2-selection__clear',
       function (evt) {
+        container._clearButtonActivated = true;
         self._handleClear(evt);
     });
 
     container.on('keypress', function (evt) {
+      if (evt.which == KEYS.DELETE || evt.which == KEYS.BACKSPACE) {
+        container._clearButtonActivated = true;
+      }
       self._handleKeyboardClear(evt, container);
     });
   };
@@ -1979,6 +2017,11 @@ S2.define('select2/selection/allowClear',[
     );
 
     $remove.attr('title', title);
+    var self = this;
+    $remove.on('focus', function (evt) {
+      // remove focus from 'combobox' if clear button is focused
+      self.container.trigger('blur', evt);
+    });
 
     Utils.StoreData($remove[0], 'data', data);
 
@@ -5729,7 +5772,7 @@ S2.define('select2/core',[
         if (key === KEYS.ESC || key === KEYS.TAB ||
             (key === KEYS.UP && evt.altKey)) {
           self.close(evt);
-          if (key === KEYS.TAB && this.isMultiple()) {
+          if (key === KEYS.TAB) {
             return;
           }
           evt.preventDefault();
@@ -5751,14 +5794,13 @@ S2.define('select2/core',[
           evt.preventDefault();
         }
       } else {
-        if (key === KEYS.ENTER || key === KEYS.SPACE ||
-            (key === KEYS.DOWN && evt.altKey)) {
+        if (key === KEYS.ENTER || key === KEYS.SPACE || key === KEYS.DOWN) {
           if (
             key === KEYS.ENTER && document.activeElement && (
             document.activeElement.classList.contains('select2-selection__choice__remove') ||
             document.activeElement.classList.contains('select2-selection__clear'))
           ) return;
-          self.open();
+          self.open(key === KEYS.DOWN);
 
           evt.preventDefault();
         }
@@ -5885,7 +5927,7 @@ S2.define('select2/core',[
     }
   };
 
-  Select2.prototype.open = function () {
+  Select2.prototype.open = function (shouldHighlightFirstItem = false) {
     if (this.isOpen()) {
       return;
     }
@@ -5894,7 +5936,14 @@ S2.define('select2/core',[
       return;
     }
 
-    this.trigger('query', {});
+    this.trigger('query', { term: '' });
+
+    if (!shouldHighlightFirstItem) return;
+    // when down arrow is used to open, highlight the first item in the list and move 'virtual' focus to it
+    // we should give it a slight delay to ensure that the results have been rendered
+    setTimeout(() => {
+      this.trigger('results:highlightFirstItem', {});
+    }, 1);
   };
 
   Select2.prototype.reFetch = function () {
@@ -5910,7 +5959,6 @@ S2.define('select2/core',[
     if (!this.isOpen()) {
       return;
     }
-
     this.trigger('close', { originalEvent : evt });
   };
 
