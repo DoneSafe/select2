@@ -1,5 +1,5 @@
 /*!
- * Select2 4.0.13-ds.2
+ * Select2 4.0.13-ds.3
  * https://select2.github.io
  *
  * Released under the MIT license
@@ -1102,7 +1102,6 @@ S2.define('select2/results',[
 
       if (container.isOpen()) {
         self.setClasses();
-        self.highlightFirstItem();
       }
     });
 
