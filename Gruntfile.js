@@ -223,8 +223,8 @@ module.exports = function (grunt) {
           'tests/**/*.js'
         ],
         tasks: [
+          'increment-version',
           'compile',
-          'test',
           'minify'
         ]
       },
@@ -233,6 +233,7 @@ module.exports = function (grunt) {
           'src/scss/**/*.scss'
         ],
         tasks: [
+          'increment-version',
           'compile',
           'minify'
         ]
@@ -250,8 +251,33 @@ module.exports = function (grunt) {
 
   grunt.loadNpmTasks('grunt-sass');
 
+  // Custom task to increment the DS version number
+  grunt.registerTask('increment-version', 'Increment DS version number', function() {
+    var pkg = grunt.file.readJSON('package.json');
+    var version = pkg.version;
+
+    // Parse the version format: x.y.z-ds.n
+    var versionMatch = version.match(/^(\d+\.\d+\.\d+-ds\.)(\d+)$/);
+
+    if (versionMatch) {
+      var baseVersion = versionMatch[1];
+      var dsNumber = parseInt(versionMatch[2], 10);
+      var newVersion = baseVersion + (dsNumber + 1);
+
+      pkg.version = newVersion;
+      grunt.file.write('package.json', JSON.stringify(pkg, null, 2) + '\n');
+
+      grunt.log.writeln('Version updated from ' + version + ' to ' + newVersion);
+
+      // Update the package config for use in other tasks
+      grunt.config.set('package', pkg);
+    } else {
+      grunt.log.error('Version format does not match expected pattern: x.y.z-ds.n');
+    }
+  });
+
   grunt.registerTask('default', ['compile', 'test', 'lint', 'minify']);
-  grunt.registerTask('build', ['compile', 'minify']);
+  grunt.registerTask('build', ['increment-version', 'compile', 'minify']);
 
   grunt.registerTask('compile', [
     'requirejs:dist', 'requirejs:dist.full', 'requirejs:i18n',

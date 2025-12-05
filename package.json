@@ -59,10 +59,13 @@
     "grunt-contrib-watch": "~1.1.0",
     "grunt-sass": "^2.1.0",
     "jquery-mousewheel": "~3.1.13",
-    "node-sass": "^4.12.0"
+    "node-sass": "^4.12.0",
+    "nodemon": "^3.1.11"
   },
   "dependencies": {},
   "scripts": {
-    "build": "grunt build"
+    "build": "grunt build",
+    "watch": "grunt watch",
+    "yalc-watch": "nodemon --watch dist --exec 'yalc push'"
   }
 }
