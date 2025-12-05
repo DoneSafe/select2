@@ -1,5 +1,5 @@
 /*!
- * Select2 4.0.13-ds.4
+ * Select2 4.0.13-ds.5
  * https://select2.github.io
  *
  * Released under the MIT license
@@ -1402,27 +1402,27 @@ S2.define('select2/results',[
   return Results;
 });
 
-S2.define('select2/keys',[
+S2.define('select2/modern-keys',[
 
 ], function () {
   var KEYS = {
-    BACKSPACE: 8,
-    TAB: 9,
-    ENTER: 13,
-    SHIFT: 16,
-    CTRL: 17,
-    ALT: 18,
-    ESC: 27,
-    SPACE: 32,
-    PAGE_UP: 33,
-    PAGE_DOWN: 34,
-    END: 35,
-    HOME: 36,
-    LEFT: 37,
-    UP: 38,
-    RIGHT: 39,
-    DOWN: 40,
-    DELETE: 46
+    BACKSPACE: 'Backspace',
+    TAB: 'Tab',
+    ENTER: 'Enter',
+    SHIFT: 'Shift',
+    CTRL: 'Control',
+    ALT: 'Alt',
+    ESC: 'Escape',
+    SPACE: ' ',
+    PAGE_UP: 'PageUp',
+    PAGE_DOWN: 'PageDown',
+    END: 'End',
+    HOME: 'Home',
+    LEFT: 'ArrowLeft',
+    UP: 'ArrowUp',
+    RIGHT: 'ArrowRight',
+    DOWN: 'ArrowDown',
+    DELETE: 'Delete'
   };
 
   return KEYS;
@@ -1431,7 +1431,7 @@ S2.define('select2/keys',[
 S2.define('select2/selection/base',[
   'jquery',
   '../utils',
-  '../keys'
+  '../modern-keys'
 ], function ($, Utils, KEYS) {
   function BaseSelection ($element, options) {
     this.$element = $element;
@@ -1484,7 +1484,7 @@ S2.define('select2/selection/base',[
     this.$selection.on('keydown', function (evt) {
       self.trigger('keypress', evt);
 
-      if (evt.which === KEYS.SPACE) {
+      if (evt.key === KEYS.SPACE) {
         evt.preventDefault();
       }
     });
@@ -1613,7 +1613,7 @@ S2.define('select2/selection/single',[
   'jquery',
   './base',
   '../utils',
-  '../keys'
+  '../modern-keys'
 ], function ($, BaseSelection, Utils, KEYS) {
   function SingleSelection () {
     SingleSelection.__super__.constructor.apply(this, arguments);
@@ -1654,7 +1654,7 @@ S2.define('select2/selection/single',[
 
     this.$selection.on('mousedown', function (evt) {
       // Only respond to left clicks
-      if (evt.which !== 1) {
+      if (evt.button !== 0) {
         return;
       }
 
@@ -1904,8 +1904,8 @@ S2.define('select2/selection/placeholder',[
 
 S2.define('select2/selection/allowClear',[
   'jquery',
-  '../keys',
-  '../utils'
+  '../modern-keys',
+  '../utils',
 ], function ($, KEYS, Utils) {
   function AllowClear () { }
 
@@ -1930,7 +1930,7 @@ S2.define('select2/selection/allowClear',[
     });
 
     container.on('keypress', function (evt) {
-      if (evt.which == KEYS.DELETE || evt.which == KEYS.BACKSPACE) {
+      if (evt.key == KEYS.DELETE || evt.key == KEYS.BACKSPACE) {
         container._clearButtonActivated = true;
       }
       self._handleKeyboardClear(evt, container);
@@ -1993,7 +1993,7 @@ S2.define('select2/selection/allowClear',[
       return;
     }
 
-    if (evt.which == KEYS.DELETE || evt.which == KEYS.BACKSPACE) {
+    if (evt.key == KEYS.DELETE || evt.key == KEYS.BACKSPACE) {
       this._handleClear(evt);
     }
   };
@@ -2034,7 +2034,7 @@ S2.define('select2/selection/allowClear',[
 S2.define('select2/selection/search',[
   'jquery',
   '../utils',
-  '../keys'
+  '../modern-keys'
 ], function ($, Utils, KEYS) {
   function Search (decorated, $element, options) {
     decorated.call(this, $element, options);
@@ -2119,7 +2119,7 @@ S2.define('select2/selection/search',[
 
       self._keyUpPrevented = evt.isDefaultPrevented();
 
-      var key = evt.which;
+      var key = evt.key;
 
       if (key === KEYS.BACKSPACE && self.$search.val() === '') {
         var $previousChoice = self.$searchContainer
@@ -2181,7 +2181,7 @@ S2.define('select2/selection/search',[
           return;
         }
 
-        var key = evt.which;
+        var key = evt.key;
 
         // We can freely ignore events from modifier keys
         if (key == KEYS.SHIFT || key == KEYS.CTRL || key == KEYS.ALT) {
@@ -5442,7 +5442,7 @@ S2.define('select2/core',[
   'jquery',
   './options',
   './utils',
-  './keys'
+  './modern-keys'
 ], function ($, Options, Utils, KEYS) {
   var Select2 = function ($element, options) {
     if (Utils.GetData($element[0], 'select2') != null) {
@@ -5766,7 +5766,7 @@ S2.define('select2/core',[
     });
 
     this.on('keypress', function (evt) {
-      var key = evt.which;
+      var key = evt.key;
 
       if (self.isOpen()) {
         if (key === KEYS.ESC || key === KEYS.TAB ||

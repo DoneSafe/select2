@@ -1,7 +1,7 @@
 define([
   'jquery',
   '../utils',
-  '../keys'
+  '../modern-keys'
 ], function ($, Utils, KEYS) {
   function Search (decorated, $element, options) {
     decorated.call(this, $element, options);
@@ -86,7 +86,7 @@ define([
 
       self._keyUpPrevented = evt.isDefaultPrevented();
 
-      var key = evt.which;
+      var key = evt.key;
 
       if (key === KEYS.BACKSPACE && self.$search.val() === '') {
         var $previousChoice = self.$searchContainer
@@ -148,7 +148,7 @@ define([
           return;
         }
 
-        var key = evt.which;
+        var key = evt.key;
 
         // We can freely ignore events from modifier keys
         if (key == KEYS.SHIFT || key == KEYS.CTRL || key == KEYS.ALT) {

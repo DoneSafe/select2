@@ -1,7 +1,7 @@
 define([
   'jquery',
   '../utils',
-  '../keys'
+  '../modern-keys'
 ], function ($, Utils, KEYS) {
   function BaseSelection ($element, options) {
     this.$element = $element;
@@ -54,7 +54,7 @@ define([
     this.$selection.on('keydown', function (evt) {
       self.trigger('keypress', evt);
 
-      if (evt.which === KEYS.SPACE) {
+      if (evt.key === KEYS.SPACE) {
         evt.preventDefault();
       }
     });

@@ -2,7 +2,7 @@ define([
   'jquery',
   './options',
   './utils',
-  './keys'
+  './modern-keys'
 ], function ($, Options, Utils, KEYS) {
   var Select2 = function ($element, options) {
     if (Utils.GetData($element[0], 'select2') != null) {
@@ -326,7 +326,7 @@ define([
     });
 
     this.on('keypress', function (evt) {
-      var key = evt.which;
+      var key = evt.key;
 
       if (self.isOpen()) {
         if (key === KEYS.ESC || key === KEYS.TAB ||

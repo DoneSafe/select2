@@ -1,7 +1,7 @@
 define([
   'jquery',
-  '../keys',
-  '../utils'
+  '../modern-keys',
+  '../utils',
 ], function ($, KEYS, Utils) {
   function AllowClear () { }
 
@@ -26,7 +26,7 @@ define([
     });
 
     container.on('keypress', function (evt) {
-      if (evt.which == KEYS.DELETE || evt.which == KEYS.BACKSPACE) {
+      if (evt.key == KEYS.DELETE || evt.key == KEYS.BACKSPACE) {
         container._clearButtonActivated = true;
       }
       self._handleKeyboardClear(evt, container);
@@ -89,7 +89,7 @@ define([
       return;
     }
 
-    if (evt.which == KEYS.DELETE || evt.which == KEYS.BACKSPACE) {
+    if (evt.key == KEYS.DELETE || evt.key == KEYS.BACKSPACE) {
       this._handleClear(evt);
     }
   };

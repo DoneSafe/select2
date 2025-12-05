@@ -2,7 +2,7 @@ define([
   'jquery',
   './base',
   '../utils',
-  '../keys'
+  '../modern-keys'
 ], function ($, BaseSelection, Utils, KEYS) {
   function SingleSelection () {
     SingleSelection.__super__.constructor.apply(this, arguments);
@@ -43,7 +43,7 @@ define([
 
     this.$selection.on('mousedown', function (evt) {
       // Only respond to left clicks
-      if (evt.which !== 1) {
+      if (evt.button !== 0) {
         return;
       }
 

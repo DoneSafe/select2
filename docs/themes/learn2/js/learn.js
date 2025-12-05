@@ -207,7 +207,7 @@ jQuery(document).ready(function() {
             });
         }
     });
-    
+
     // allow keyboard control for prev/next links
     jQuery(function() {
         jQuery('.nav-prev').click(function(){
@@ -220,15 +220,15 @@ jQuery(document).ready(function() {
 
     jQuery(document).keydown(function(e) {
       // prev links - left arrow key
-      if(e.which == '37') {
+      if(e.key == 'ArrowLeft') {
         jQuery('.nav.nav-prev').click();
       }
 
       // next links - right arrow key
-      if(e.which == '39') {
+      if(e.key == 'ArrowRight') {
         jQuery('.nav.nav-next').click();
       }
-    });     
+    });
 
 });
 
