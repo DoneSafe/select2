@@ -360,7 +360,7 @@ define([
             document.activeElement.classList.contains('select2-selection__choice__remove') ||
             document.activeElement.classList.contains('select2-selection__clear'))
           ) return;
-          self.open(key === KEYS.DOWN);
+          self.open();
 
           evt.preventDefault();
         }
@@ -487,7 +487,7 @@ define([
     }
   };
 
-  Select2.prototype.open = function (shouldHighlightFirstItem = false) {
+  Select2.prototype.open = function () {
     if (this.isOpen()) {
       return;
     }
@@ -497,13 +497,6 @@ define([
     }
 
     this.trigger('query', { term: '' });
-
-    if (!shouldHighlightFirstItem) return;
-    // when down arrow is used to open, highlight the first item in the list and move 'virtual' focus to it
-    // we should give it a slight delay to ensure that the results have been rendered
-    setTimeout(() => {
-      this.trigger('results:highlightFirstItem', {});
-    }, 1);
   };
 
   Select2.prototype.reFetch = function () {
