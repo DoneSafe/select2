@@ -107,7 +107,7 @@ define([
     var title = removeAllLabel ? removeAllLabel : removeAll();
 
     var $remove = $(
-      `<button type="button" class="select2-selection__clear">
+      `<button type="button" class="select2-selection__clear" aria-label="${title}">
         <span aria-hidden="true" class="select2-clear-icon">&times;</span>
       </button>`
     );

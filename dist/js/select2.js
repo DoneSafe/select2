@@ -1,5 +1,5 @@
 /*!
- * Select2 4.0.13-ds.6
+ * Select2 4.0.13-ds.7
  * https://select2.github.io
  *
  * Released under the MIT license
@@ -2012,7 +2012,7 @@ S2.define('select2/selection/allowClear',[
     var title = removeAllLabel ? removeAllLabel : removeAll();
 
     var $remove = $(
-      `<button type="button" class="select2-selection__clear">
+      `<button type="button" class="select2-selection__clear" aria-label="${title}">
         <span aria-hidden="true" class="select2-clear-icon">&times;</span>
       </button>`
     );
