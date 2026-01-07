@@ -1,5 +1,5 @@
 /*!
- * Select2 4.0.13-ds.7
+ * Select2 4.0.13-ds.8
  * https://select2.github.io
  *
  * Released under the MIT license
@@ -860,9 +860,10 @@ S2.define('select2/results',[
 
     if (this.options.get('multiple')) {
       $results.attr('aria-multiselectable', 'true');
-      $results.attr('aria-labelledby',[this.options.get('labelledByBefore'), this.options.get('labelledByAfter')].join(' ').trim());
-      $results.attr('aria-describedby', this.options.get('describedBy'));
     }
+
+    $results.attr('aria-labelledby',[this.options.get('labelledByBefore'), this.options.get('labelledByAfter')].join(' ').trim());
+    $results.attr('aria-describedby', this.options.get('describedBy'));
 
     this.$results = $results;
 
@@ -2046,12 +2047,13 @@ S2.define('select2/selection/search',[
       '<li class="select2-search select2-search--inline">' +
         '<input class="select2-search__field" type="search" tabindex="-1"' +
         ' autocomplete="off" autocorrect="off" autocapitalize="none"' +
-        ' spellcheck="false" role="searchbox" aria-autocomplete="list" aria-label="Search" />' +
+        ' spellcheck="false" role="searchbox" aria-autocomplete="list" />' +
       '</li>'
     );
 
     this.$searchContainer = $search;
     this.$search = $search.find('input');
+    this.$search.attr('aria-label', this.options.get('searchLabel') || 'Search');
 
     var $rendered = decorated.call(this);
 
@@ -4161,12 +4163,14 @@ S2.define('select2/dropdown/search',[
       '<span class="select2-search select2-search--dropdown">' +
         '<input class="select2-search__field" type="search" tabindex="-1"' +
         ' autocomplete="off" autocorrect="off" autocapitalize="none"' +
-        ' spellcheck="false" role="searchbox" aria-autocomplete="list" aria-label="Search" />' +
+        ' spellcheck="false" role="searchbox" aria-autocomplete="list" />' +
       '</span>'
     );
 
     this.$searchContainer = $search;
     this.$search = $search.find('input');
+
+    this.$search.attr('aria-label', this.options.get('searchLabel') || 'Search');
 
     $rendered.prepend($search);
 

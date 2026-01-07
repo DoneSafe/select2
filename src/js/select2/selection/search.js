@@ -12,12 +12,13 @@ define([
       '<li class="select2-search select2-search--inline">' +
         '<input class="select2-search__field" type="search" tabindex="-1"' +
         ' autocomplete="off" autocorrect="off" autocapitalize="none"' +
-        ' spellcheck="false" role="searchbox" aria-autocomplete="list" aria-label="Search" />' +
+        ' spellcheck="false" role="searchbox" aria-autocomplete="list" />' +
       '</li>'
     );
 
     this.$searchContainer = $search;
     this.$search = $search.find('input');
+    this.$search.attr('aria-label', this.options.get('searchLabel') || 'Search');
 
     var $rendered = decorated.call(this);
 
