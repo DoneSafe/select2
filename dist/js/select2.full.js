@@ -1,5 +1,5 @@
 /*!
- * Select2 4.0.13-ds.8
+ * Select2 4.0.13-ds.9
  * https://select2.github.io
  *
  * Released under the MIT license
@@ -1056,6 +1056,10 @@ S2.define('select2/results',[
     }
 
     if (data._resultId != null) {
+      option.id = data._resultId;
+    } else {
+      option._resultId = this.data.generateResultId(this.data.container, option);
+      data._resultId = option._resultId;
       option.id = data._resultId;
     }
 

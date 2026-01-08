@@ -216,6 +216,10 @@ define([
 
     if (data._resultId != null) {
       option.id = data._resultId;
+    } else {
+      option._resultId = this.data.generateResultId(this.data.container, option);
+      data._resultId = option._resultId;
+      option.id = data._resultId;
     }
 
     if (data.title) {
