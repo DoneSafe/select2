@@ -19,7 +19,8 @@ define([
       }
     }
 
-    this.$selection.on('click', '.select2-selection__clear',
+    const attachClickTo = this.options.get('multiple') ? this.$selection : container.$container;
+    attachClickTo.on('click', '.select2-selection__clear',
       function (evt) {
         container._clearButtonActivated = true;
         self._handleClear(evt);
@@ -39,7 +40,8 @@ define([
       return;
     }
 
-    var $clear = this.$selection.find('.select2-selection__clear');
+    const parent = this.options.get('multiple') ? this.$selection : this.$selection.parent('.selection');
+    var $clear = parent.find('.select2-selection__clear')
 
     // Ignore the event if nothing has been selected
     if ($clear.length === 0) {
@@ -121,7 +123,21 @@ define([
 
     Utils.StoreData($remove[0], 'data', data);
 
-    this.$selection.find('.select2-selection__rendered').prepend($remove);
+    const clearParent = this._getClearParentForInsert();
+    // Remove any existing clear buttons first to prevent duplicates
+    clearParent.find('.select2-selection__clear').remove();
+    // prepend in the original location for multiple select
+    // and append above "combobox" role so screen readers read it without remove button label
+    this.options.get('multiple') ? clearParent.prepend($remove) : clearParent.append($remove)
+  };
+
+
+  AllowClear.prototype._getClearParentForInsert = function () {
+    if (this.options.get('multiple')) {
+      return this.$selection.find('.select2-selection__rendered');
+    }
+
+    return this.$selection.parent('.selection');
   };
 
   return AllowClear;

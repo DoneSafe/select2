@@ -89,6 +89,7 @@ define([
 
   SingleSelection.prototype.clear = function () {
     var $rendered = this.$selection.find('.select2-selection__rendered');
+    this.$selection.parent('.selection').find('.select2-selection__clear').remove();
     $rendered.empty();
     $rendered.attr('title', this.options.get('placeholder') || ''); // set placeholder as tooltip on empty
   };

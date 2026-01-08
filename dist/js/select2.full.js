@@ -1,5 +1,5 @@
 /*!
- * Select2 4.0.13-ds.10
+ * Select2 4.0.13-ds.11
  * https://select2.github.io
  *
  * Released under the MIT license
@@ -1710,6 +1710,7 @@ S2.define('select2/selection/single',[
 
   SingleSelection.prototype.clear = function () {
     var $rendered = this.$selection.find('.select2-selection__rendered');
+    this.$selection.parent('.selection').find('.select2-selection__clear').remove();
     $rendered.empty();
     $rendered.attr('title', this.options.get('placeholder') || ''); // set placeholder as tooltip on empty
   };
@@ -1938,7 +1939,8 @@ S2.define('select2/selection/allowClear',[
       }
     }
 
-    this.$selection.on('click', '.select2-selection__clear',
+    const attachClickTo = this.options.get('multiple') ? this.$selection : container.$container;
+    attachClickTo.on('click', '.select2-selection__clear',
       function (evt) {
         container._clearButtonActivated = true;
         self._handleClear(evt);
@@ -1958,7 +1960,8 @@ S2.define('select2/selection/allowClear',[
       return;
     }
 
-    var $clear = this.$selection.find('.select2-selection__clear');
+    const parent = this.options.get('multiple') ? this.$selection : this.$selection.parent('.selection');
+    var $clear = parent.find('.select2-selection__clear')
 
     // Ignore the event if nothing has been selected
     if ($clear.length === 0) {
@@ -2040,7 +2043,21 @@ S2.define('select2/selection/allowClear',[
 
     Utils.StoreData($remove[0], 'data', data);
 
-    this.$selection.find('.select2-selection__rendered').prepend($remove);
+    const clearParent = this._getClearParentForInsert();
+    // Remove any existing clear buttons first to prevent duplicates
+    clearParent.find('.select2-selection__clear').remove();
+    // prepend in the original location for multiple select
+    // and append above "combobox" role so screen readers read it without remove button label
+    this.options.get('multiple') ? clearParent.prepend($remove) : clearParent.append($remove)
+  };
+
+
+  AllowClear.prototype._getClearParentForInsert = function () {
+    if (this.options.get('multiple')) {
+      return this.$selection.find('.select2-selection__rendered');
+    }
+
+    return this.$selection.parent('.selection');
   };
 
   return AllowClear;
@@ -6130,6 +6147,8 @@ S2.define('select2/core',[
     this.$container = $container;
 
     this.$container.addClass('select2-container--' + this.options.get('theme'));
+    const typeClass = `select2-container--${this.options.get('multiple') ? 'multiple' : 'single'}`
+    this.$container.addClass(typeClass);
 
     Utils.StoreData($container[0], 'element', this.$element);
 

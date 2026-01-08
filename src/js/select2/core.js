@@ -672,6 +672,8 @@ define([
     this.$container = $container;
 
     this.$container.addClass('select2-container--' + this.options.get('theme'));
+    const typeClass = `select2-container--${this.options.get('multiple') ? 'multiple' : 'single'}`
+    this.$container.addClass(typeClass);
 
     Utils.StoreData($container[0], 'element', this.$element);
 
