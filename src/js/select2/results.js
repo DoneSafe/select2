@@ -21,7 +21,11 @@ define([
       $results.attr('aria-multiselectable', 'true');
     }
 
-    $results.attr('aria-labelledby',[this.options.get('labelledByBefore'), this.options.get('labelledByAfter')].join(' ').trim());
+    if (this.options.get('stringLabel')) {
+      $results.attr('aria-label', this.options.get('stringLabel'));
+    } else {
+      $results.attr('aria-labelledby',[this.options.get('labelledByBefore'), this.options.get('labelledByAfter')].join(' ').trim());
+    }
     $results.attr('aria-describedby', this.options.get('describedBy'));
 
     this.$results = $results;

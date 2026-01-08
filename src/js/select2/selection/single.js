@@ -38,7 +38,12 @@ define([
       .attr('aria-readonly', 'true')
       .attr('title', this.options.get('placeholder') || '');
 
-    this.$selection.attr('aria-labelledby', [this.options.get('labelledByBefore'), id, this.options.get('labelledByAfter')].join(' ').trim());
+    if (this.options.get('stringLabel')) {
+      this.$selection.attr('aria-label', this.options.get('stringLabel'));
+    } else {
+      this.$selection.attr('aria-labelledby', [this.options.get('labelledByBefore'), id, this.options.get('labelledByAfter')].join(' ').trim());
+    }
+
     this.$selection.attr('aria-describedby', this.options.get('describedBy'));
 
     this.$selection.on('mousedown', function (evt) {
