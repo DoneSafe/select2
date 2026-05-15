@@ -73,16 +73,12 @@ define([
 
     container.on('focus', function (evt) {
       if (container._clearButtonActivated) {
-        // Reset the flag and don't toggle when clear button was activated
+        // Reset the flag when clear button was activated
         container._clearButtonActivated = false;
-        return;
       }
 
       if (!container.isOpen()) {
         self.$selection.trigger('focus');
-        self.trigger('toggle', {
-          originalEvent: evt
-        });
       }
     });
   };
