@@ -47,7 +47,7 @@ define([
       self.trigger('focus', evt);
     });
 
-    this.$selection.on('blur', function (evt) {
+    this.$selection.on('focusout', function (evt) {
       self._handleBlur(evt);
     });
 

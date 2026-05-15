@@ -358,7 +358,7 @@ define([
       $highlighted.trigger('mouseup');
     });
 
-    container.on('results:select', function () {
+    container.on('results:select', function (params) {
       var $highlighted = self.getHighlightedResults();
 
       if ($highlighted.length === 0) {
@@ -371,6 +371,7 @@ define([
         self.trigger('close', {});
       } else {
         self.trigger('select', {
+          originalEvent: params.originalEvent,
           data: data
         });
       }

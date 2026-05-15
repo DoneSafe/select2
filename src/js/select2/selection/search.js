@@ -22,8 +22,6 @@ define([
 
     var $rendered = decorated.call(this);
 
-    this._transferTabIndex();
-
     return $rendered;
   };
 
@@ -48,8 +46,6 @@ define([
 
     container.on('enable', function () {
       self.$search.prop('disabled', false);
-
-      self._transferTabIndex();
     });
 
     container.on('disable', function () {
@@ -57,7 +53,10 @@ define([
     });
 
     container.on('focus', function (evt) {
-      self.$search.trigger('focus');
+      // Focus is handled by $selection; only forward to $search when open
+      if (container.isOpen()) {
+        self.$search.trigger('focus');
+      }
     });
 
     container.on('results:focus', function (params) {
@@ -158,12 +157,6 @@ define([
 
         // Tabbing will be handled during the `keydown` phase
         if (key == KEYS.TAB) {
-          if (
-            document.activeElement === self.$search[0] ||
-            $.contains(self.$search[0], document.activeElement)
-          ) {
-            self.trigger('query', {term: self.$search.val() || ''});
-          }
           return;
         }
 
@@ -180,8 +173,8 @@ define([
    * @private
    */
   Search.prototype._transferTabIndex = function (decorated) {
-    this.$search.attr('tabindex', this.$selection.attr('tabindex'));
-    this.$selection.attr('tabindex', '-1');
+    // Tabindex stays on $selection so Tab focuses the container, not the search
+    // input directly. The search input receives focus only when the dropdown opens.
   };
 
   Search.prototype.createPlaceholder = function (decorated, placeholder) {
