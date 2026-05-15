@@ -1,5 +1,5 @@
 /*!
- * Select2 4.0.13-ds.11
+ * Select2 4.0.13-ds.12
  * https://select2.github.io
  *
  * Released under the MIT license
@@ -1199,7 +1199,7 @@ S2.define('select2/results',[
       $highlighted.trigger('mouseup');
     });
 
-    container.on('results:select', function () {
+    container.on('results:select', function (params) {
       var $highlighted = self.getHighlightedResults();
 
       if ($highlighted.length === 0) {
@@ -1212,6 +1212,7 @@ S2.define('select2/results',[
         self.trigger('close', {});
       } else {
         self.trigger('select', {
+          originalEvent: params.originalEvent,
           data: data
         });
       }
@@ -1487,7 +1488,7 @@ S2.define('select2/selection/base',[
       self.trigger('focus', evt);
     });
 
-    this.$selection.on('blur', function (evt) {
+    this.$selection.on('focusout', function (evt) {
       self._handleBlur(evt);
     });
 
@@ -1694,16 +1695,12 @@ S2.define('select2/selection/single',[
 
     container.on('focus', function (evt) {
       if (container._clearButtonActivated) {
-        // Reset the flag and don't toggle when clear button was activated
+        // Reset the flag when clear button was activated
         container._clearButtonActivated = false;
-        return;
       }
 
       if (!container.isOpen()) {
         self.$selection.trigger('focus');
-        self.trigger('toggle', {
-          originalEvent: evt
-        });
       }
     });
   };
@@ -2087,8 +2084,6 @@ S2.define('select2/selection/search',[
 
     var $rendered = decorated.call(this);
 
-    this._transferTabIndex();
-
     return $rendered;
   };
 
@@ -2113,8 +2108,6 @@ S2.define('select2/selection/search',[
 
     container.on('enable', function () {
       self.$search.prop('disabled', false);
-
-      self._transferTabIndex();
     });
 
     container.on('disable', function () {
@@ -2122,7 +2115,10 @@ S2.define('select2/selection/search',[
     });
 
     container.on('focus', function (evt) {
-      self.$search.trigger('focus');
+      // Focus is handled by $selection; only forward to $search when open
+      if (container.isOpen()) {
+        self.$search.trigger('focus');
+      }
     });
 
     container.on('results:focus', function (params) {
@@ -2223,12 +2219,6 @@ S2.define('select2/selection/search',[
 
         // Tabbing will be handled during the `keydown` phase
         if (key == KEYS.TAB) {
-          if (
-            document.activeElement === self.$search[0] ||
-            $.contains(self.$search[0], document.activeElement)
-          ) {
-            self.trigger('query', {term: self.$search.val() || ''});
-          }
           return;
         }
 
@@ -2245,8 +2235,8 @@ S2.define('select2/selection/search',[
    * @private
    */
   Search.prototype._transferTabIndex = function (decorated) {
-    this.$search.attr('tabindex', this.$selection.attr('tabindex'));
-    this.$selection.attr('tabindex', '-1');
+    // Tabindex stays on $selection so Tab focuses the container, not the search
+    // input directly. The search input receives focus only when the dropdown opens.
   };
 
   Search.prototype.createPlaceholder = function (decorated, placeholder) {
@@ -5812,7 +5802,9 @@ S2.define('select2/core',[
           }
           evt.preventDefault();
         } else if (key === KEYS.ENTER) {
-          self.trigger('results:select', {});
+          self.trigger('results:select', {
+            originalEvent: evt
+          });
 
           evt.preventDefault();
         } else if ((key === KEYS.SPACE && evt.ctrlKey)) {
